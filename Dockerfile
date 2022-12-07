@@ -210,6 +210,15 @@ RUN mkdir -p "$PGDATA" && chown -R postgres:postgres "$PGDATA" && chmod 777 "$PG
 STOPSIGNAL SIGINT
 #Postgres INSTALL Finish
 ####################################################
+#Zabbix Install START
+#	https://www.zabbix.com/download?zabbix=6.0&os_distribution=debian&os_version=11&components=server_frontend_agent&db=pgsql&ws=nginx
+RUN apt update
+RUN wget https://repo.zabbix.com/zabbix/6.0/debian/pool/main/z/zabbix-release/zabbix-release_6.0-4%2Bdebian11_all.deb -P /data
+RUN dpkg -i /data/zabbix-release_6.0-4+debian11_all.deb
+RUN apt update
+RUN apt install -y zabbix-server-pgsql zabbix-frontend-php php7.4-pgsql zabbix-nginx-conf zabbix-sql-scripts zabbix-agent
+#Zabbix Install Finish
+####################################################
 #Config Files
 RUN sed -i 's/listen.owner \= www-data/listen.owner \= nginx/g' /etc/php/7.4/fpm/pool.d/www.conf
 RUN sed -i 's/listen.group \= www-data/listen.group \= nginx/g' /etc/php/7.4/fpm/pool.d/www.conf
