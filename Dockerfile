@@ -214,7 +214,7 @@ STOPSIGNAL SIGINT
 RUN sed -i 's/listen.owner \= www-data/listen.owner \= nginx/g' /etc/php/7.4/fpm/pool.d/www.conf
 RUN sed -i 's/listen.group \= www-data/listen.group \= nginx/g' /etc/php/7.4/fpm/pool.d/www.conf
 COPY config/nginx.conf /etc/nginx/conf.d/nginx.conf
-COPY docker-entrypoint.sh /usr/local/bin/
+COPY script/docker-entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 VOLUME /var/lib/postgresql/data
 VOLUME /data
