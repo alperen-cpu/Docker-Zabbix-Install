@@ -231,6 +231,9 @@ RUN rm -rf /etc/nginx/conf.d/zabbix.conf
 RUN sed -i 's/DBName=zabbix/DBName='${POSTGRES_DB}'/g' /etc/zabbix/zabbix_server.conf
 RUN sed -i 's/DBUser=zabbix/DBUser='${POSTGRES_USER}'/g' /etc/zabbix/zabbix_server.conf
 RUN sed -i 's/# DBPassword=/DBPassword='${POSTGRES_PASSWORD}'/g' /etc/zabbix/zabbix_server.conf
+RUN sed -i 's/DBName=/DBName='${POSTGRES_DB}'/g' /etc/zabbix/zabbix_server.conf
+RUN sed -i 's/DBUser=/DBUser='${POSTGRES_USER}'/g' /etc/zabbix/zabbix_server.conf
+RUN sed -i 's/DBPassword=/DBPassword='${POSTGRES_PASSWORD}'/g' /etc/zabbix/zabbix_server.conf
 RUN sed -i 's/listen.owner \= www-data/listen.owner \= nginx/g' /etc/php/7.4/fpm/pool.d/www.conf
 RUN sed -i 's/listen.group \= www-data/listen.group \= nginx/g' /etc/php/7.4/fpm/pool.d/www.conf
 RUN sed -i 's/post_max_size = 8M/post_max_size = 16M/g' /etc/php/7.4/fpm/php.ini
