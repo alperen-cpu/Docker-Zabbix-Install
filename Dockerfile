@@ -228,7 +228,6 @@ RUN service php7.4-fpm start
 ####################################################
 #Config Files
 RUN rm -rf /etc/nginx/conf.d/zabbix.conf
-RUN zcat /usr/share/zabbix-sql-scripts/postgresql/server.sql.gz | psql -U ${POSTGRES_USER} -d ${POSTGRES_DB}
 RUN sed -i 's/DBName=zabbix/DBName='${POSTGRES_DB}'/g' /etc/zabbix/zabbix_server.conf
 RUN sed -i 's/DBUser=zabbix/DBUser='${POSTGRES_USER}'/g' /etc/zabbix/zabbix_server.conf
 RUN sed -i 's/# DBPassword=/DBPassword='${POSTGRES_PASSWORD}'/g' /etc/zabbix/zabbix_server.conf
