@@ -3,9 +3,9 @@ services:
   zabbix:
     image: "test-zabbix"
     environment:
-      - POSTGRES_PASSWORD=Y9PdtjyP9tvD
-      - POSTGRES_DB=alperdb
-      - POSTGRES_USER=alperensah
+      - POSTGRES_PASSWORD=
+      - POSTGRES_DB=
+      - POSTGRES_USER=
     ports:
       - "443:443"
       - "5432:5432"
