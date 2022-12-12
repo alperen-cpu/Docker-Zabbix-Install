@@ -7,9 +7,9 @@ services:
       - POSTGRES_DB=alperdb
       - POSTGRES_USER=alperensah
     ports:
-      - "80:80"
       - "443:443"
       - "5432:5432"
+      - "8080:8080"
     volumes:
     - db:/var/lib/postgresql/data
     - data:/data

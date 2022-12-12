@@ -217,9 +217,16 @@ RUN wget https://repo.zabbix.com/zabbix/6.0/debian/pool/main/z/zabbix-release/za
 RUN dpkg -i /data/zabbix-release_6.0-4+debian11_all.deb
 RUN apt update
 RUN apt install -y zabbix-server-pgsql zabbix-frontend-php php7.4-pgsql zabbix-nginx-conf zabbix-sql-scripts zabbix-agent
+RUN zcat /usr/share/zabbix-sql-scripts/postgresql/server.sql.gz | psql -U alperensah -d alperdb
+RUN service zabbix-server restart
+RUN service zabbix-agent restart
+RUN service nginx restart
+RUN service php7.4-fpm restart
 #Zabbix Install Finish
 ####################################################
 #Config Files
+#RUN sed -i 's/DBName \=zabbix/DBName \=${POSTGRES_DB}/g'
+#RUN sed -i 's/DBUser \=zabbix/DBUser \=${POSTGRES_USER}/g'
 RUN sed -i 's/listen.owner \= www-data/listen.owner \= nginx/g' /etc/php/7.4/fpm/pool.d/www.conf
 RUN sed -i 's/listen.group \= www-data/listen.group \= nginx/g' /etc/php/7.4/fpm/pool.d/www.conf
 COPY config/nginx.conf /etc/nginx/conf.d/nginx.conf
@@ -229,6 +236,6 @@ VOLUME /var/lib/postgresql/data
 VOLUME /data
 ####################################################
 #Other
-EXPOSE 80 443 5432
+EXPOSE 443 5432 8080
 ENTRYPOINT ["docker-entrypoint.sh"]
 CMD ["postgres"]
