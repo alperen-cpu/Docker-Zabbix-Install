@@ -2,10 +2,12 @@ version: "3.7"
 services:
   zabbix:
     image: "test-zabbix"
+    env_file:
+      - .env
     environment:
-      - POSTGRES_PASSWORD=
-      - POSTGRES_DB=
-      - POSTGRES_USER=
+      - POSTGRES_PASSWORD
+      - POSTGRES_DB
+      - POSTGRES_USER
     ports:
       - "443:443"
       - "5432:5432"

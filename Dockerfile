@@ -69,6 +69,9 @@ RUN apt-get install -y php${PHP_VERSION} \
     php${PHP_VERSION}-gd \
     php${PHP_VERSION}-intl \
     php${PHP_VERSION}-pgsql \
+	php${PHP_VERSION}-bcmath \
+	php${PHP_VERSION}-mbstring \
+	php${PHP_VERSION}-ldap \
     && apt update -y \
     && php -v
 #PHP INSTALL FINISH
@@ -217,18 +220,23 @@ RUN wget https://repo.zabbix.com/zabbix/6.0/debian/pool/main/z/zabbix-release/za
 RUN dpkg -i /data/zabbix-release_6.0-4+debian11_all.deb
 RUN apt update
 RUN apt install -y zabbix-server-pgsql zabbix-frontend-php php7.4-pgsql zabbix-nginx-conf zabbix-sql-scripts zabbix-agent
-RUN zcat /usr/share/zabbix-sql-scripts/postgresql/server.sql.gz | psql -U ${POSTGRES_USER} -d ${POSTGRES_DB}
-RUN service zabbix-server restart
-RUN service zabbix-agent restart
-RUN service nginx restart
-RUN service php7.4-fpm restart
+RUN service zabbix-server start
+RUN service zabbix-agent start
+RUN service nginx start
+RUN service php7.4-fpm start
 #Zabbix Install Finish
 ####################################################
 #Config Files
-#RUN sed -i 's/DBName \=zabbix/DBName \=${POSTGRES_DB}/g'
-#RUN sed -i 's/DBUser \=zabbix/DBUser \=${POSTGRES_USER}/g'
+RUN rm -rf /etc/nginx/conf.d/zabbix.conf
+RUN zcat /usr/share/zabbix-sql-scripts/postgresql/server.sql.gz | psql -U ${POSTGRES_USER} -d ${POSTGRES_DB}
+RUN sed -i 's/DBName=zabbix/DBName='${POSTGRES_DB}'/g' /etc/zabbix/zabbix_server.conf
+RUN sed -i 's/DBUser=zabbix/DBUser='${POSTGRES_USER}'/g' /etc/zabbix/zabbix_server.conf
+RUN sed -i 's/# DBPassword=/DBPassword='${POSTGRES_PASSWORD}'/g' /etc/zabbix/zabbix_server.conf
 RUN sed -i 's/listen.owner \= www-data/listen.owner \= nginx/g' /etc/php/7.4/fpm/pool.d/www.conf
 RUN sed -i 's/listen.group \= www-data/listen.group \= nginx/g' /etc/php/7.4/fpm/pool.d/www.conf
+RUN sed -i 's/post_max_size = 8M/post_max_size = 16M/g' /etc/php/7.4/fpm/php.ini
+RUN sed -i 's/max_execution_time = 30/max_execution_time = 300/g' /etc/php/7.4/fpm/php.ini
+RUN sed -i 's/max_input_time = 60/max_input_time = 300/g' /etc/php/7.4/fpm/php.ini
 COPY config/nginx.conf /etc/nginx/conf.d/nginx.conf
 COPY script/docker-entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
