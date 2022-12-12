@@ -16,6 +16,11 @@ After the image is created, you need to run the .sql file in the container.
   ```
   zcat /usr/share/zabbix-sql-scripts/postgresql/server.sql.gz | psql -U ${POSTGRES_USER} -d ${POSTGRES_DB}
   ```
+ Dasboard Zabbix-Server is not running
+ 
+```#RUN sed -i 's/DBName=zabbix/DBName='${POSTGRES_DB}'/g' /etc/zabbix/zabbix_server.conf```
+```#RUN sed -i 's/DBUser=zabbix/DBUser='${POSTGRES_USER}'/g' /etc/zabbix/zabbix_server.conf```
+```#RUN sed -i 's/# DBPassword=/DBPassword='${POSTGRES_PASSWORD}'/g' /etc/zabbix/zabbix_server.conf```
 
 ## Environment Variables
 
